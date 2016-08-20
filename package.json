@@ -1,0 +1,23 @@
+{
+  "name": "@datatypes/repository",
+  "version": "0.0.0",
+  "description": "Class for repositories",
+  "main": "source/index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "node tests/instantiation.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/datatypesjs/repository"
+  },
+  "keywords": ["datatype"],
+  "author": "Adrian Sieber",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/datatypesjs/repository/issues"
+  },
+  "homepage": "https://github.com/datatypesjs/repository#readme"
+}
