@@ -1,5 +1,5 @@
 const nativeUrl = require('url')
-const providersMap = require('./providersMap')
+const providers = require('./providers')
 
 function parseRepoUrl (repoUrl) {
   if (typeof repoUrl === 'string') {
@@ -70,6 +70,11 @@ module.exports = class Repository {
     }
   }
 
+  static addProvider (providerObject) {
+    providers.add(providerObject)
+    return this
+  }
+
   get slug () {
     return '/' + this.owner + '/' + this.name
   }
@@ -85,17 +90,15 @@ module.exports = class Repository {
   }
 
   get url () {
-    return providersMap[this.provider].url + this.slug
+    return providers.get(this.provider).url + this.slug
   }
   set url (repoUrl) {
     Object.assign(this, parseRepoUrl(repoUrl))
   }
 
   get apiUrl () {
-    return providersMap[this.provider].api + this.slug
+    return providers.get(this.provider).apiUrl + this.slug
   }
-  set apiUrl (apiUrl) {
-    this._apiUrl = apiUrl
   set apiUrl (value) {
     throw getNotSettableError('apiUrl', value, ['provider', 'slug'])
   }
