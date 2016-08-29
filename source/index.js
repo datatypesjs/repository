@@ -29,6 +29,13 @@ function getNotSettableError (propertyName, value, dependencies) {
 
 module.exports = class Repository {
   constructor (options = {}) {
+    // Delete all fields which provider a getter but no setter
+    delete options.slug
+    delete options.fullName
+    delete options.apiUrl
+    delete options.object
+    delete options.string
+
     Object.assign(this, options)
   }
 
