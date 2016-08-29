@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "node tests/instantiation.js",
+    "test": "find ./tests -iname '*.js' -exec node {} \\;",
     "prepublish": "npm test"
   },
   "repository": {
