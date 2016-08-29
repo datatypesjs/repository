@@ -101,8 +101,9 @@ module.exports = class Repository {
   }
 
   get object () {
-    const {name, owner, provider, url, apiUrl} = this
-    return {name, owner, provider, url, apiUrl}
+    const {name, owner, fullName, provider, url, apiUrl} = this
+    return {name, owner, fullName, provider, url, apiUrl}
+  }
   set object (value) {
     throw getNotSettableError(
       'apiUrl',
