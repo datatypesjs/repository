@@ -77,7 +77,7 @@ module.exports = class Repository {
     const {name, owner, provider, url, apiUrl} = this
     return {name, owner, provider, url, apiUrl}
   }
-  toJson () {
+  toJSON () {
     return this.object
   }
 
