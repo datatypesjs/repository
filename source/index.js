@@ -15,6 +15,18 @@ function parseRepoUrl (repoUrl) {
   }
 }
 
+function getNotSettableError (propertyName, value, dependencies) {
+  const depsString = dependencies
+    .map(dep => `".${dep}"`)
+    .join(' and ')
+
+  return new Error(
+    `".${propertyName}" is a computed property
+    and can not be set to "${value}" directly.
+    Set ${depsString} instead.`.replace(/\s+/g, ' ')
+  )
+}
+
 module.exports = class Repository {
   constructor (options = {}) {
     Object.assign(this, options)
@@ -54,9 +66,15 @@ module.exports = class Repository {
   get slug () {
     return '/' + this.owner + '/' + this.name
   }
+  set slug (value) {
+    throw getNotSettableError('slug', value, ['owner', 'name'])
+  }
 
   get fullName () {
     return this.owner + '/' + this.name
+  }
+  set fullName (value) {
+    throw getNotSettableError('slug', value, ['owner', 'name'])
   }
 
   get url () {
@@ -71,11 +89,19 @@ module.exports = class Repository {
   }
   set apiUrl (apiUrl) {
     this._apiUrl = apiUrl
+  set apiUrl (value) {
+    throw getNotSettableError('apiUrl', value, ['provider', 'slug'])
   }
 
   get object () {
     const {name, owner, provider, url, apiUrl} = this
     return {name, owner, provider, url, apiUrl}
+  set object (value) {
+    throw getNotSettableError(
+      'apiUrl',
+      value,
+      ['name', 'owner', 'provider']
+    )
   }
   toJSON () {
     return this.object
@@ -83,6 +109,13 @@ module.exports = class Repository {
 
   get string () {
     return nativeUrl.format(this.url)
+  }
+  set string (value) {
+    throw getNotSettableError(
+      'apiUrl',
+      value,
+      ['name', 'owner', 'provider']
+    )
   }
   toString () {
     return this.string
