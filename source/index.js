@@ -1,4 +1,5 @@
 const nativeUrl = require('url')
+const path = require('path')
 const providers = require('./providers')
 
 function parseRepoUrl (repoUrl) {
@@ -47,7 +48,15 @@ module.exports = class Repository {
   }
 
   static fromPath (repoPath) {
-    this.path = repoPath
+    const absolutePath = path.resolve(repoPath)
+
+    return new Repository({
+      absolutePath,
+      name: path.basename(
+        absolutePath,
+        path.extname(absolutePath)
+      ),
+    })
   }
 
   static fromUrl (repoUrl) {
@@ -83,6 +92,8 @@ module.exports = class Repository {
   }
 
   get fullName () {
+    if (!this.owner || !this.name) return
+
     return this.owner + '/' + this.name
   }
   set fullName (value) {
@@ -90,6 +101,7 @@ module.exports = class Repository {
   }
 
   get url () {
+    if (!this.provider || !this.slug) return
     return providers.get(this.provider).url + this.slug
   }
   set url (repoUrl) {
@@ -97,6 +109,7 @@ module.exports = class Repository {
   }
 
   get apiUrl () {
+    if (!this.provider || !this.slug) return
     return providers.get(this.provider).apiUrl + this.slug
   }
   set apiUrl (value) {
@@ -104,8 +117,8 @@ module.exports = class Repository {
   }
 
   get object () {
-    const {name, owner, fullName, provider, url, apiUrl} = this
-    return {name, owner, fullName, provider, url, apiUrl}
+    const {name, owner, fullName, provider, url, apiUrl, absolutePath} = this
+    return {name, owner, fullName, provider, url, apiUrl, absolutePath}
   }
   set object (value) {
     throw getNotSettableError(
@@ -119,7 +132,9 @@ module.exports = class Repository {
   }
 
   get string () {
-    return nativeUrl.format(this.url)
+    return this.url
+      ? nativeUrl.format(this.url)
+      : this.name
   }
   set string (value) {
     throw getNotSettableError(
